@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Clock</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #0b66ff;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        #clock-display {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #analog-clock {
+            position: relative;
+        }
+        
+        #digital-clock {
+            font-size: 4em;
+            font-weight: bold;
+            display: none;
+        }
+        
+        canvas {
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 600px) {
+            #digital-clock {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Clock</h1>
+        <button id="toggle-btn" onclick="toggleClock()">Switch to Digital</button>
+        
+        <div id="clock-display">
+            <div id="analog-clock">
+                <canvas id="canvas" width="350" height="350"></canvas>
+            </div>
+            <div id="digital-clock"></div>
+        </div>
+    </div>
+
+    <script>
+        let isAnalog = true;
+        let canvas, ctx;
+        
+        function init() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            updateClock();
+        }
+        
+        function toggleClock() {
+            isAnalog = !isAnalog;
+            const toggleBtn = document.getElementById('toggle-btn');
+            const analogClock = document.getElementById('analog-clock');
+            const digitalClock = document.getElementById('digital-clock');
+            
+            if (isAnalog) {
+                toggleBtn.textContent = 'Switch to Digital';
+                analogClock.style.display = 'block';
+                digitalClock.style.display = 'none';
+            } else {
+                toggleBtn.textContent = 'Switch to Analog';
+                analogClock.style.display = 'none';
+                digitalClock.style.display = 'block';
+            }
+        }
+        
+        function drawAnalogClock() {
+            const now = new Date();
+            const radius = canvas.width / 2 - 10;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw clock face
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw hour marks
+            for (let i = 0; i < 12; i++) {
+                const angle = (i * 30) * Math.PI / 180;
+                const x1 = centerX + (radius - 20) * Math.sin(angle);
+                const y1 = centerY - (radius - 20) * Math.cos(angle);
+                const x2 = centerX + (radius - 10) * Math.sin(angle);
+                const y2 = centerY - (radius - 10) * Math.cos(angle);
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            
+            // Calculate hand positions
+            const hours = now.getHours() % 12;
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
+            
+            const hourAngle = (hours + minutes / 60 + seconds / 3600) * 30;
+            const minuteAngle = (minutes + seconds / 60) * 6;
+            const secondAngle = seconds * 6;
+            
+            // Draw hands
+            drawHand(hourAngle, radius * 0.5, 4);
+            drawHand(minuteAngle, radius * 0.7, 2);
+            drawHand(secondAngle, radius * 0.8, 1);
+        }
+        
+        function drawHand(angleDegrees, length, width) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const angle = (angleDegrees - 90) * Math.PI / 180;
+            const x = centerX + length * Math.cos(angle);
+            const y = centerY + length * Math.sin(angle);
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = width;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+        
+        function updateDigitalClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('digital-clock').textContent = timeString;
+        }
+        
+        function updateClock() {
+            if (isAnalog) {
+                drawAnalogClock();
+            } else {
+                updateDigitalClock();
+            }
+            
+            // Update every second
+            setTimeout(updateClock, 1000);
+        }
+        
+        // Start the clock when page loads
+        window.onload = init;
+    </script>
+</body>
+</html>
