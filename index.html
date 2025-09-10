@@ -242,20 +242,48 @@
         let canvas, ctx;
         let clockColor = 'rgba(255, 255, 255, 0.9)';
         let backgroundColor = '#0b66ff';
+
+        // Load settings from localStorage
+        function loadSettings() {
+            try {
+                const settings = JSON.parse(localStorage.getItem('clockSettings'));
+                if (settings) {
+                    isAnalog = settings.isAnalog ?? true;
+                    clockColor = settings.clockColor ?? clockColor;
+                    backgroundColor = settings.backgroundColor ?? backgroundColor;
+                }
+            } catch (e) {}
+        }
+
+        // Save settings to localStorage
+        function saveSettings() {
+            const settings = {
+                isAnalog,
+                clockColor,
+                backgroundColor
+            };
+            localStorage.setItem('clockSettings', JSON.stringify(settings));
+        }
         
         function init() {
+            loadSettings();
             canvas = document.getElementById('canvas');
             ctx = canvas.getContext('2d');
             resizeCanvas();
             updateClock();
             initColorWheel();
-            
+
+            // Apply loaded colors
+            document.body.style.background = `linear-gradient(135deg, ${backgroundColor}, hsl(220, 80%, 40%))`;
+            document.getElementById('digital-clock').style.color = clockColor;
+            canvas.style.borderColor = clockColor;
+
             // Add resize listener
             window.addEventListener('resize', () => {
                 resizeCanvas();
                 updateDigitalClockSize();
             });
-            
+
             // Handle PWA display mode
             handleDisplayMode();
         }
@@ -304,10 +332,11 @@
         
         function toggleClock() {
             isAnalog = !isAnalog;
+            saveSettings();
             const toggleBtn = document.getElementById('toggle-btn');
             const analogClock = document.getElementById('analog-clock');
             const digitalClock = document.getElementById('digital-clock');
-            
+
             if (isAnalog) {
                 toggleBtn.textContent = 'Switch to Digital';
                 analogClock.style.display = 'block';
@@ -368,7 +397,7 @@
         
         function updateColors(angle, isOuter) {
             const hue = ((angle * 180 / Math.PI) + 360) % 360;
-            
+
             if (isOuter) {
                 // Update background color
                 backgroundColor = `hsl(${hue}, 70%, 50%)`;
@@ -382,6 +411,7 @@
                 // Update canvas border color
                 canvas.style.borderColor = clockColor;
             }
+            saveSettings();
         }
         
         function drawAnalogClock() {

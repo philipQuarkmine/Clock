@@ -10,12 +10,12 @@
   "background_color": "#0b66ff",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Ccircle cx='96' cy='96' r='88' fill='%23ffffff' stroke='%230b66ff' stroke-width='8'/%3E%3Cline x1='96' y1='32' x2='96' y2='48' stroke='%230b66ff' stroke-width='4'/%3E%3Cline x1='96' y1='144' x2='96' y2='160' stroke='%230b66ff' stroke-width='4'/%3E%3Cline x1='32' y1='96' x2='48' y2='96' stroke='%230b66ff' stroke-width='4'/%3E%3Cline x1='144' y1='96' x2='160' y2='96' stroke='%230b66ff' stroke-width='4'/%3E%3Cline x1='96' y1='96' x2='96' y2='64' stroke='%230b66ff' stroke-width='6'/%3E%3Cline x1='96' y1='96' x2='120' y2='96' stroke='%230b66ff' stroke-width='4'/%3E%3Ccircle cx='96' cy='96' r='6' fill='%230b66ff'/%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Ccircle cx='96' cy='96' r='88' fill='%23ffffff' stroke='%230b66ff' stroke-width='8'/%3E%3Ctext x='96' y='120' text-anchor='middle' font-size='90' font-family='Segoe UI, Arial, sans-serif' fill='%230b66ff' dy='-10'%3EC%3C/text%3E%3C/svg%3E",
       "sizes": "192x192",
       "type": "image/svg+xml"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ccircle cx='256' cy='256' r='240' fill='%23ffffff' stroke='%230b66ff' stroke-width='16'/%3E%3Cline x1='256' y1='48' x2='256' y2='80' stroke='%230b66ff' stroke-width='8'/%3E%3Cline x1='256' y1='432' x2='256' y2='464' stroke='%230b66ff' stroke-width='8'/%3E%3Cline x1='48' y1='256' x2='80' y2='256' stroke='%230b66ff' stroke-width='8'/%3E%3Cline x1='432' y1='256' x2='464' y2='256' stroke='%230b66ff' stroke-width='8'/%3E%3Cline x1='256' y1='256' x2='256' y2='160' stroke='%230b66ff' stroke-width='12'/%3E%3Cline x1='256' y1='256' x2='320' y2='256' stroke='%230b66ff' stroke-width='8'/%3E%3Ccircle cx='256' cy='256' r='12' fill='%230b66ff'/%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ccircle cx='256' cy='256' r='240' fill='%23ffffff' stroke='%230b66ff' stroke-width='16'/%3E%3Ctext x='256' y='320' text-anchor='middle' font-size='240' font-family='Segoe UI, Arial, sans-serif' fill='%230b66ff' dy='-40'%3EC%3C/text%3E%3C/svg%3E",
       "sizes": "512x512",
       "type": "image/svg+xml"
     }
