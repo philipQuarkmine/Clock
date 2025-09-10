@@ -1,6 +1,6 @@
 const CACHE_NAME = 'elegant-clock-v1';
 const urlsToCache = [
-  '/clock/web_clock.html',
+  '/clock/index.html',
   '/clock/manifest.json',
   '/clock/sw.js'
 ];
