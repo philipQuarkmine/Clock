@@ -3,40 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Clock</title>
+    <title>Elegant Clock</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b66ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Elegant Clock">
+    
     <style>
         body {
             margin: 0;
-            padding: 20px;
-            background-color: #0b66ff;
-            font-family: Arial, sans-serif;
+            padding: 0;
+            background: linear-gradient(135deg, #0b66ff, #1a74e8);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
             text-align: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
         }
         
         .container {
-            max-width: 600px;
-            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
         
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: white;
-            color: black;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            font-size: 14px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            color: #333;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
-            margin-bottom: 20px;
+            box-shadow: 
+                0 8px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 3px rgba(255, 255, 255, 0.8),
+                inset 0 -1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            z-index: 1000;
         }
         
         button:hover {
-            background-color: #f0f0f0;
+            background: linear-gradient(145deg, #f0f0f0, #d9d9d9);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 20px rgba(0, 0, 0, 0.4),
+                inset 0 1px 3px rgba(255, 255, 255, 0.9),
+                inset 0 -1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 3px rgba(255, 255, 255, 0.7),
+                inset 0 -1px 3px rgba(0, 0, 0, 0.2);
         }
         
         #clock-display {
             width: 100%;
-            height: 400px;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -44,34 +82,156 @@
         
         #analog-clock {
             position: relative;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
         }
         
         #digital-clock {
-            font-size: 4em;
-            font-weight: bold;
+            font-size: 8vw;
+            font-weight: 300;
             display: none;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(255, 255, 255, 0.3),
+                0 20px 40px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.05em;
+            font-family: 'Segoe UI', 'Arial', monospace;
+            white-space: nowrap;
+            transition: font-size 0.3s ease;
         }
         
         canvas {
-            border: 2px solid white;
+            border: 4px solid rgba(255, 255, 255, 0.9);
             border-radius: 50%;
+            box-shadow: 
+                0 0 30px rgba(255, 255, 255, 0.3),
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
         }
         
-        @media (max-width: 600px) {
+        /* Media queries for responsive sizing */
+        @media (max-width: 400px) or (max-height: 400px) {
             #digital-clock {
-                font-size: 2.5em;
+                font-size: max(3rem, 6vw) !important;
             }
+        }
+        
+        @media (min-width: 401px) and (min-height: 401px) {
+            #digital-clock {
+                font-size: max(4rem, min(8vw, 6vh)) !important;
+            }
+        }
+        
+        @media (min-width: 800px) and (min-height: 600px) {
+            #digital-clock {
+                font-size: max(5rem, min(10vw, 8vh)) !important;
+            }
+        }
+        
+        /* Color wheel styles */
+        .color-wheel-container {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 120px;
+            height: 120px;
+            z-index: 1000;
+        }
+        
+        .color-wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(
+                hsl(0, 80%, 50%),
+                hsl(60, 80%, 50%),
+                hsl(120, 80%, 50%),
+                hsl(180, 80%, 50%),
+                hsl(240, 80%, 50%),
+                hsl(300, 80%, 50%),
+                hsl(360, 80%, 50%)
+            );
+            box-shadow: 
+                0 8px 16px rgba(0, 0, 0, 0.3),
+                inset 0 0 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        
+        .color-wheel::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border-radius: 50%;
+            background: conic-gradient(
+                hsl(0, 40%, 30%),
+                hsl(60, 40%, 30%),
+                hsl(120, 40%, 30%),
+                hsl(180, 40%, 30%),
+                hsl(240, 40%, 30%),
+                hsl(300, 40%, 30%),
+                hsl(360, 40%, 30%)
+            );
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .color-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            cursor: grab;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+        
+        .color-handle:active {
+            cursor: grabbing;
+        }
+        
+        .outer-handle {
+            top: 10px;
+            left: 50%;
+        }
+        
+        .inner-handle {
+            top: 25px;
+            left: 50%;
+        }
+        
+        /* PWA specific styles */
+        .pwa-mode {
+            /* Additional styling when running as PWA */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* Prevent text selection on color wheel */
+        .color-wheel-container * {
+            user-select: none;
+            -webkit-user-select: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Simple Clock</h1>
         <button id="toggle-btn" onclick="toggleClock()">Switch to Digital</button>
+        
+        <div class="color-wheel-container">
+            <div class="color-wheel" id="color-wheel">
+                <div class="color-handle outer-handle" id="outer-handle"></div>
+                <div class="color-handle inner-handle" id="inner-handle"></div>
+            </div>
+        </div>
         
         <div id="clock-display">
             <div id="analog-clock">
-                <canvas id="canvas" width="350" height="350"></canvas>
+                <canvas id="canvas" width="400" height="400"></canvas>
             </div>
             <div id="digital-clock"></div>
         </div>
@@ -80,11 +240,66 @@
     <script>
         let isAnalog = true;
         let canvas, ctx;
+        let clockColor = 'rgba(255, 255, 255, 0.9)';
+        let backgroundColor = '#0b66ff';
         
         function init() {
             canvas = document.getElementById('canvas');
             ctx = canvas.getContext('2d');
+            resizeCanvas();
             updateClock();
+            initColorWheel();
+            
+            // Add resize listener
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                updateDigitalClockSize();
+            });
+            
+            // Handle PWA display mode
+            handleDisplayMode();
+        }
+        
+        function handleDisplayMode() {
+            // Hide browser UI hints when in standalone/fullscreen mode
+            if (window.matchMedia('(display-mode: standalone)').matches || 
+                window.matchMedia('(display-mode: fullscreen)').matches) {
+                document.body.classList.add('pwa-mode');
+            }
+            
+            // Listen for display mode changes
+            window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
+                if (e.matches) {
+                    document.body.classList.add('pwa-mode');
+                } else {
+                    document.body.classList.remove('pwa-mode');
+                }
+            });
+        }
+        
+        function resizeCanvas() {
+            // Calculate size based on window dimensions with minimum of 300px
+            const maxSize = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8);
+            const size = Math.max(300, Math.min(maxSize, 600));
+            canvas.width = size;
+            canvas.height = size;
+        }
+        
+        function updateDigitalClockSize() {
+            const digitalClock = document.getElementById('digital-clock');
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            let fontSize;
+            if (windowWidth <= 400 || windowHeight <= 400) {
+                fontSize = Math.max(32, windowWidth * 0.06) + 'px';
+            } else if (windowWidth >= 800 && windowHeight >= 600) {
+                fontSize = Math.max(80, Math.min(windowWidth * 0.1, windowHeight * 0.08)) + 'px';
+            } else {
+                fontSize = Math.max(64, Math.min(windowWidth * 0.08, windowHeight * 0.06)) + 'px';
+            }
+            
+            digitalClock.style.fontSize = fontSize;
         }
         
         function toggleClock() {
@@ -101,38 +316,115 @@
                 toggleBtn.textContent = 'Switch to Analog';
                 analogClock.style.display = 'none';
                 digitalClock.style.display = 'block';
+                updateDigitalClockSize();
+            }
+        }
+        
+        function initColorWheel() {
+            const colorWheel = document.getElementById('color-wheel');
+            const outerHandle = document.getElementById('outer-handle');
+            const innerHandle = document.getElementById('inner-handle');
+            
+            let isDragging = false;
+            let currentHandle = null;
+            
+            function handleMouseDown(e, handle) {
+                isDragging = true;
+                currentHandle = handle;
+                e.preventDefault();
+            }
+            
+            function handleMouseMove(e) {
+                if (!isDragging || !currentHandle) return;
+                
+                const rect = colorWheel.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const mouseX = e.clientX - centerX;
+                const mouseY = e.clientY - centerY;
+                
+                const angle = Math.atan2(mouseY, mouseX);
+                const radius = currentHandle === outerHandle ? 50 : 35;
+                
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                
+                currentHandle.style.left = (60 + x) + 'px';
+                currentHandle.style.top = (60 + y) + 'px';
+                
+                updateColors(angle, currentHandle === outerHandle);
+            }
+            
+            function handleMouseUp() {
+                isDragging = false;
+                currentHandle = null;
+            }
+            
+            outerHandle.addEventListener('mousedown', (e) => handleMouseDown(e, outerHandle));
+            innerHandle.addEventListener('mousedown', (e) => handleMouseDown(e, innerHandle));
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        }
+        
+        function updateColors(angle, isOuter) {
+            const hue = ((angle * 180 / Math.PI) + 360) % 360;
+            
+            if (isOuter) {
+                // Update background color
+                backgroundColor = `hsl(${hue}, 70%, 50%)`;
+                document.body.style.background = `linear-gradient(135deg, ${backgroundColor}, hsl(${hue}, 80%, 40%))`;
+            } else {
+                // Update clock color
+                clockColor = `hsl(${hue}, 80%, 80%)`;
+                const digitalClock = document.getElementById('digital-clock');
+                const canvas = document.getElementById('canvas');
+                digitalClock.style.color = clockColor;
+                // Update canvas border color
+                canvas.style.borderColor = clockColor;
             }
         }
         
         function drawAnalogClock() {
             const now = new Date();
-            const radius = canvas.width / 2 - 10;
+            const radius = canvas.width / 2 - 20;
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Draw clock face
+            // Create radial gradient for clock face
+            const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
+            
+            // Draw clock face background
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 2;
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Draw clock face border
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = clockColor;
+            ctx.lineWidth = 3;
             ctx.stroke();
             
             // Draw hour marks
             for (let i = 0; i < 12; i++) {
                 const angle = (i * 30) * Math.PI / 180;
-                const x1 = centerX + (radius - 20) * Math.sin(angle);
-                const y1 = centerY - (radius - 20) * Math.cos(angle);
-                const x2 = centerX + (radius - 10) * Math.sin(angle);
-                const y2 = centerY - (radius - 10) * Math.cos(angle);
+                const x1 = centerX + (radius - 30) * Math.sin(angle);
+                const y1 = centerY - (radius - 30) * Math.cos(angle);
+                const x2 = centerX + (radius - 15) * Math.sin(angle);
+                const y2 = centerY - (radius - 15) * Math.cos(angle);
                 
                 ctx.beginPath();
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);
-                ctx.strokeStyle = 'white';
-                ctx.lineWidth = 2;
+                ctx.strokeStyle = clockColor;
+                ctx.lineWidth = i % 3 === 0 ? 4 : 2;
+                ctx.lineCap = 'round';
                 ctx.stroke();
             }
             
@@ -145,23 +437,42 @@
             const minuteAngle = (minutes + seconds / 60) * 6;
             const secondAngle = seconds * 6;
             
-            // Draw hands
-            drawHand(hourAngle, radius * 0.5, 4);
-            drawHand(minuteAngle, radius * 0.7, 2);
-            drawHand(secondAngle, radius * 0.8, 1);
+            // Draw hands with shadows
+            drawHand(hourAngle, radius * 0.5, 6, clockColor);
+            drawHand(minuteAngle, radius * 0.75, 4, clockColor);
+            drawHand(secondAngle, radius * 0.85, 2, 'rgba(255, 100, 100, 0.9)');
+            
+            // Draw center dot
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 8, 0, 2 * Math.PI);
+            ctx.fillStyle = clockColor;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
         }
         
-        function drawHand(angleDegrees, length, width) {
+        function drawHand(angleDegrees, length, width, color = 'rgba(255, 255, 255, 0.9)') {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             const angle = (angleDegrees - 90) * Math.PI / 180;
             const x = centerX + length * Math.cos(angle);
             const y = centerY + length * Math.sin(angle);
             
+            // Draw shadow
+            ctx.beginPath();
+            ctx.moveTo(centerX + 2, centerY + 2);
+            ctx.lineTo(x + 2, y + 2);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.lineWidth = width;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+            
+            // Draw hand
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
             ctx.lineTo(x, y);
-            ctx.strokeStyle = 'white';
+            ctx.strokeStyle = color;
             ctx.lineWidth = width;
             ctx.lineCap = 'round';
             ctx.stroke();
@@ -186,6 +497,19 @@
         
         // Start the clock when page loads
         window.onload = init;
+        
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
