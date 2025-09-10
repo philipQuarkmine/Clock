@@ -2,8 +2,8 @@
   "name": "Elegant Clock",
   "short_name": "Clock",
   "description": "A beautiful analog and digital clock with customizable colors",
-  "start_url": "/clock/index.html",
-  "scope": "/clock/"
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "fullscreen",
   "orientation": "any",
   "theme_color": "#0b66ff",

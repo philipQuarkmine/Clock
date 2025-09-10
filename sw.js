@@ -1,8 +1,8 @@
 const CACHE_NAME = 'elegant-clock-v1';
 const urlsToCache = [
-  '/clock/index.html',
-  '/clock/manifest.json',
-  '/clock/sw.js'
+  './index.html',
+  './manifest.json',
+  './sw.js'
 ];
 
 self.addEventListener('install', event => {
